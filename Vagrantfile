@@ -25,7 +25,6 @@ CNG
 sudo service jenkins start
 sudo service nginx start
 EOF
-]
 Vagrant.configure("2") do |config|
   config.vm.define "test-vagrant" do |test|
     test.vm.box = "centos/7"
