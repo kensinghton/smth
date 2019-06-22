@@ -1,7 +1,7 @@
 ENV["LC_ALL"] = "en_US.UTF-8"
 
-ip1 = vagrant ssh -c "rev1.box -I | cut -d' ' -f2" 2>/dev/null
-ip2 = vagrant ssh -c "rev2.box -I | cut -d' ' -f2" 2>/dev/null
+ip1 = 'vagrant ssh -c "rev1.box -I | cut -d' ' -f2" 2>/dev/null'
+ip2 = 'vagrant ssh -c "rev2.box -I | cut -d' ' -f2" 2>/dev/null'
 
 $script = <<-EOF1
 export LC_ALL=en_US.UTF-8
@@ -50,11 +50,20 @@ config.vm.define "test-vagrant" do |reverse1|
     reverse1.vm.hostname = "rev1.box"
     reverse1.vm.network "private_network", type: "dhcp"
     reverse1.vm.provision "shell", inline: $script1
+    #reverse1.vm.provider "virtualbox" do |vb|
+    #    vb.linked_clone = true
+    #end 
 end  
 config.vm.define "test-vagrant" do |reverse2|
     reverse2.vm.box = "generic/centos7"
     reverse2.vm.hostname = "rev2.box"
     reverse2.vm.network "private_network", type: "dhcp"
     reverse2.vm.provision "shell", inline: $script1
-end  
+    #reverse2.vm.provider "virtualbox" do |vb|
+    #    vb.linked_clone = true
+    #end 
 end
+
+ 
+end
+
