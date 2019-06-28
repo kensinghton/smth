@@ -18,7 +18,6 @@ Vagrant.configure("2") do |config|
 	  config.vm.define "node#{i}" do |rev|
             rev.vm.box = BOX_IMAGE 
 	    rev.vm.hostname = "node#{i}.box"
-	    rev.vm.network :public_network, bridge: "enp1s0", use_dhcp_assigned_default_route: true
 	    rev.vm.network "private_network", ip: "#{NETWORK_BASE}.#{INTEGRATION_START_SEGMENT + i}", netmask: NETWORK_NETMASK
 	    rev.vm.provision "shell", inline: $script_rev
 	    rev.vm.provision "shell", inline: "echo node#{i} is up and running && ifconfig | grep 'inet 192.168'"
