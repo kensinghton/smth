@@ -1,0 +1,15 @@
+#!/bin/bash
+MYNAME="Stas"
+if [ ! -z $1 ]; then
+  if [ -f $1 ]; then
+    if [ $(grep $MYNAME $1) ]; then
+      echo "ok"
+    else
+      echo $MYNAME >> $1
+    fi
+   else
+     echo "this is not file"
+   fi
+else
+  echo "Pls input file as parametr"
+fi
