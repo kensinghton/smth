@@ -11,4 +11,4 @@ for i in $(seq 1 $FILENUM); do
                 fi
          fi
 done 
-echo "$i was final"
+echo "Got $TRUENUM 'true', $i was final"
