@@ -1,14 +1,18 @@
-#!/bin/bash
-#get filemask from nomad/ directory
-#parse files for "true"
-#when got 2 "true" stop
-#
-FULLNAME=$(ls nomad/*.log|head -1)
-FILEMASK=${FULLNAME##*/}
-FILEMASK2=${FILEMASK//[0-9]/}
-
-FN=$(ls nomad/|head -1)
-FM=${FN##*/}
-FM2=$(FM//[0-9]/}
-FN=${FM2::-4}
-echo $FN
+ 1 #!/bin/bash
+ 2 DIRNAME=log
+ 3 F1=$(ls $DIRNAME|head -1)
+ 4 F2=${F1##*/}
+ 5 F3=${F2//[0-9]/}
+ 6 echo $F3
+ 7 FILENUM=$(ls -1 $DIRNAME | wc -l)
+ 8 TRUENUM=0
+ 9 while [[ $TRUENUM = '2' ]]; do
+10  for i in {1..$FILENUM}; do
+11         if [ `$(cat $F3$i)` == 'true' ; ]; then
+12           TRUENUM=$TRUENUM+1
+13           echo $TRUENUM
+14         fi
+15  done
+16 done
+17
+18 echo "$TRUENUM is done"
