@@ -1,3 +1,11 @@
 создать задание в дженкинсе
 1. создает файлы
 2. находит и обрабатывает эти файлы
+
+
+ARRAY=(true fals)
+mkdir $JOB_NAME
+for i in `seq 1 50`; do
+touch $JOB_NAME/$JOB_NAME$i.log
+echo $ARRAY[$((1 + RANDOM % 2))] >> $JOB_NAME/$JOB_NAME$i.log
+done
