@@ -1,8 +1,7 @@
-arr[1]="true"
-arr[2]="false"
+#!/bin/bash
+arr=(true true false)
 mkdir $JOB_NAME
 for i in `seq 1 50`; do
 touch $JOB_NAME/$JOB_NAME$i.log
-rand=$[$RANDOM % ${#arr[@]}]
-echo ${arr[$rand]} >> $JOB_NAME/$JOB_NAME$i.log
+echo ${arr[$(( ( RANDOM % 2 )  + 1 ))]} >> $JOB_NAME/$JOB_NAME$i.log
 done
