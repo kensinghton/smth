@@ -1,7 +1,16 @@
 #!/bin/bash
-arr=(true true false)
-mkdir $JOB_NAME
+JO=/tmp
+JOB=firsta
+arr=(true false)
+echo "$JO/$JOB/1.log"
+
+if [ -d "$JO/$JOB" ]; then
+  echo "exist"
+else
+mkdir $JO/$JOB
+fi
+
 for i in `seq 1 50`; do
-touch $JOB_NAME/$JOB_NAME$i.log
-echo ${arr[$(( ( RANDOM % 2 )  + 1 ))]} >> $JOB_NAME/$JOB_NAME$i.log
+touch $JO/$JOB/$JOB$i.log
+echo ${arr[$(( ( RANDOM % 1 )  + 0 ))]} > $JO/$JOB/$JOB$i.log
 done
