@@ -1,0 +1,21 @@
+#!/bin/bash
+CERT_FILE=./cert
+KEY_FILE_OLD=./key
+KEY_FILE_NEW=./key-new.p12
+HOST=host
+PASSWORD=0
+JKS_KEY_FILE=./keyfile.jks
+BUNDLE=bundle
+CA_BUNDLE=ca_bundle
+openssl pkcs12 -export -in $CERT_FILE -inkey $KEY_FILE_OLD -name $HOST -out $KEY_FILE_NEW
+if [ $? -eq 0 ]; 
+then echo 'Export successful...'
+else echo 'Export failed!' fi
+keytool -importkeystore -deststorepass $PASSWORD -destkeystore $JKS_KEY_FILE -srckeystore $KEY_FILE_NEW -srcstore PKCS12
+if [ $? -eq 0 ]; 
+then echo 'Import successful...'
+else echo 'Import failed!' fi
+keytool -import -alias $BUNDLE -trustcacerts -file $CA_BUNDLE -keystore $JKS_KEY_FILE
+if [ $? -eq 0 ]; 
+then echo 'Alias successful...\nAll ok!'
+else echo 'Alias failed!' fi
