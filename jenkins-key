@@ -8,17 +8,39 @@ PASSWORD=0
 JKS_KEY_FILE=./keyfile.jks
 BUNDLE=bundle
 CA_BUNDLE=ca_bundle
-if [ ! -f $CERT_FILE ]; then echo "Cert file not found!\nExiting..." && exit 1 ; fi
-if [ ! -f $KEY_FILE_OLD ]; then echo "Key file not found!\nExiting..." && exit 1 ; fi
+if [ ! -f $CERT_FILE ]; 
+  then echo "Cert file not found!\nExiting..." && exit 1 ; 
+fi
+if [ ! -f $KEY_FILE_OLD ]; 
+  then echo "Key file not found!\nExiting..." && exit 1 ; 
+fi
 openssl pkcs12 -export -in $CERT_FILE -inkey $KEY_FILE_OLD -name $HOST -out $KEY_FILE_NEW
-if [ $? -eq 0 ]; then echo 'Export successful...' else echo 'Export failed!\nExiting...' && exit 1 ; fi
-if [ ! -f $JKS_KEY_FILE ]; then echo "JKS file not found!\nExiting..." && exit 1 ; fi
-if [ ! -f $KEY_FILE_NEW ]; then echo "New key file not found!\nExiting..." && exit 1 ; fi
+if [ $? -eq 0 ]; 
+  then echo 'Export successful...' 
+  else echo 'Export failed!\nExiting...' && exit 1 ; 
+fi
+if [ ! -f $JKS_KEY_FILE ]; 
+  then echo "JKS file not found!\nExiting..." && exit 1 ; 
+fi
+if [ ! -f $KEY_FILE_NEW ]; 
+  then echo "New key file not found!\nExiting..." && exit 1 ; 
+fi
 keytool -importkeystore -deststorepass $PASSWORD -destkeystore $JKS_KEY_FILE -srckeystore $KEY_FILE_NEW -srcstore PKCS12
-if [ $? -eq 0 ]; then echo 'Import successful...' else echo 'Import failed!\nExiting...' && exit 1 ; fi
-if [ ! -f $CA_BUNDLE ]; then echo "Bundle file not found!\nExiting..." && exit 1 ; fi
-if [ ! -f $KEY_FILE_NEW ]; then echo "New key file not found!\nExiting..." && exit 1 ; fi
+if [ $? -eq 0 ]; 
+  then echo 'Import successful...' 
+  else echo 'Import failed!\nExiting...' && exit 1 ; 
+fi
+if [ ! -f $CA_BUNDLE ]; 
+  then echo "Bundle file not found!\nExiting..." && exit 1 ; 
+fi
+if [ ! -f $KEY_FILE_NEW ]; 
+  then echo "New key file not found!\nExiting..." && exit 1 ; 
+fi
 if [ "keytool -list -keystore $JKS_KEY_FILE -alias $BUNDLE" = "keytool error: java.lang.Exception: Alias does not exist" ]; 
-then echo 'Alias already existing...\nExiting...' && exit 1;
-else keytool -import -alias $BUNDLE -trustcacerts -file $CA_BUNDLE -keystore $JKS_KEY_FILE && succ=$? fi
-if [ $? -eq 0 ]; then echo 'Alias successful...\nAll ok!' else echo 'Alias failed!\nExiting...' && exit 1 ; fi
+  then echo 'Alias already existing...\nExiting...' && exit 1;
+  else keytool -import -alias $BUNDLE -trustcacerts -file $CA_BUNDLE -keystore $JKS_KEY_FILE && succ=$? 
+fi
+if [ $? -eq 0 ]; 
+  then echo 'Alias successful...\nAll ok!' 
+  else echo 'Alias failed!\nExiting...' && exit 1 ; 
+fi
