@@ -16,7 +16,7 @@ if [ ! -f $KEY_FILE_OLD ];
 fi
 openssl pkcs12 -export -in $CERT_FILE -inkey $KEY_FILE_OLD -name $HOST -out $KEY_FILE_NEW
 if [ $? -eq 0 ]; 
-  then echo 'Export successful...' 
+  then echo 'Export successful...' ;
   else echo 'Export failed!\nExiting...' && exit 1 ; 
 fi
 if [ ! -f $JKS_KEY_FILE ]; 
@@ -41,6 +41,6 @@ if [ "keytool -list -keystore $JKS_KEY_FILE -alias $BUNDLE" = "keytool error: ja
   else keytool -import -alias $BUNDLE -trustcacerts -file $CA_BUNDLE -keystore $JKS_KEY_FILE && succ=$? 
 fi
 if [ $? -eq 0 ]; 
-  then echo 'Alias successful...\nAll ok!' 
+  then echo 'Alias successful...\nAll ok!' ;
   else echo 'Alias failed!\nExiting...' && exit 1 ; 
 fi
