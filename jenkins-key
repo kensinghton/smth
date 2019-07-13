@@ -19,6 +19,6 @@ if [ $? -eq 0 ]; then echo 'Import successful...' else echo 'Import failed!\nExi
 if [ ! -f $CA_BUNDLE ]; then echo "Bundle file not found!\nExiting..." && exit 1 ; fi
 if [ ! -f $KEY_FILE_NEW ]; then echo "New key file not found!\nExiting..." && exit 1 ; fi
 if [ "keytool -list -keystore $JKS_KEY_FILE -alias $BUNDLE" = "keytool error: java.lang.Exception: Alias does not exist" ]; 
-then echo 'Alias already existing...\nExiting...' 
+then echo 'Alias already existing...\nExiting...' && exit 1;
 else keytool -import -alias $BUNDLE -trustcacerts -file $CA_BUNDLE -keystore $JKS_KEY_FILE && succ=$? fi
 if [ $? -eq 0 ]; then echo 'Alias successful...\nAll ok!' else echo 'Alias failed!\nExiting...' && exit 1 ; fi
