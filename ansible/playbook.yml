@@ -6,6 +6,17 @@
 
 - name: configure and deploy the front- and backend servers and application code
   hosts: frontend,backend
+  vars:
+    php_enable_php_fpm: true
+    apache_vhosts:
+      - servername: "www.example.com"
+        documentroot: "/var/www/example"
+        extra_parameters: |
+              ProxyPassMatch ^/(.*\.php(/.*)?)$ "fcgi://127.0.0.1:4444/var/www/example"
+  roles:
+    - geerlingguy.apache
+    - geerlingguy.php
+    - geerlingguy.apache-php-fpm  
   tasks:
   - name: install debs
     apt: name={{item}}
