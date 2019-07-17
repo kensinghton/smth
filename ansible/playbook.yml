@@ -1,0 +1,36 @@
+---
+- name: apply common configuration to all nodes
+  hosts: all
+  roles:
+    - common
+
+- name: configure and deploy the front- and backend servers and application code
+  hosts: frontend,backend
+  tasks:
+  - name: install debs
+    apt: name={{item}}
+    with_items:
+    - nginx
+    - php5-fpm
+
+- name: deploy MySQL and configure the databases
+  hosts: dbservers
+  remote_user: root
+  vars:
+     dbuser: sonofmotherfriend
+     dbpassword: very_secret_password
+  tasks:
+  - name: install debs
+    apt: name={{item}}
+    with_items:
+    - db
+    - mysql
+
+- name: deploy MySQL and configure the databases
+  hosts: redis
+  remote_user: root
+  tasks:
+  - name: install debs
+    apt: name={{item}}
+    with_items:
+    - redis
