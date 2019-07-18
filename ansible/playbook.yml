@@ -25,22 +25,6 @@
     - php5-fpm
 
 - name: deploy MySQL and configure the databases
-  hosts: dbservers
-  remote_user: root
-  tasks:
-  - name: install debs
-    apt: name={{item}}
-    with_items:
-    - db
-    - mysql
-  - name: add db user
-    no_log: true
-    mysql_user:
-      name: sonofmotherfriend
-      password: very_secret_password
-      priv: "*.*:ALL,GRANT"
-
-- name: deploy MySQL and configure the databases
   hosts: redis
   remote_user: root
   tasks:
