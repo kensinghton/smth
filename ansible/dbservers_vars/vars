@@ -1,3 +1,5 @@
-ansible_user=sonofmotherfriend
-ansible_port=2323
-password=very_secret_password
+---
+- vars:
+    ansible_user: sonofmotherfriend
+    ansible_port: 2323
+    password: very_secret_password
