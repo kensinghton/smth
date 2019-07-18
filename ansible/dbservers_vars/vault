@@ -1,1 +1,1 @@
-vault_ansible_user=very_secret_password
+vault_password=very_secret_password
