@@ -57,12 +57,19 @@ sudo service jenkins start
 java -jar jenkins-cli.jar -s http://localhost:8080/ install-plugin https://plugins.jenkins.io/ansible -deploy
 
 sudo cat >~/jenkins.xml <<JJF
-server {
-    listen	 80 default_server;
-    server_name  localhost;
-   
+job("INSTALL") {
+	description ()
+	keepDependencies(false)
+	disabled(false)
+	steps {
+		shell(""" 
+			""")
+		}
+}
 JJF
-sudo java -jar /home/ubuntu/jenkins-cli.jar -s http://localhost:8080 create-job test<~/jenkins.xml
+curl https://localhost/jnlpJars/jenkins-cli.jar
+sudo java -jar ~jenkins-cli.jar -s http://localhost create-job INSTALL<~/jenkins.xml
+sudo java -jar ~jenkins-cli.jar -s http://localhost build INSTALL
 
 EOF2
 
