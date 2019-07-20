@@ -48,6 +48,10 @@ server {
     }
 }
 NDC
+sudo mkdir ~/ansible
+sudo wget -O ~/ansible/ https://raw.githubusercontent.com/kensinghton/smth/master/vagrant_jenkins_ansible/inventory.ini
+sudo wget -O ~/ansible/ https://raw.githubusercontent.com/kensinghton/smth/master/vagrant_jenkins_ansible/playbook.yml
+
 sudo service nginx start
 sudo service jenkins start
 EOF2
