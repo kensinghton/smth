@@ -1,0 +1,62 @@
+ENV["LC_ALL"] = "en_US.UTF-8"
+BOX_IMAGE = "generic/centos7"
+NODE_COUNT = "2".to_i
+NETWORK_BASE = "192.168.101"
+NETWORK_NETMASK = "255.255.255.0"
+INTEGRATION_START_SEGMENT = 10
+
+Vagrant.configure("2") do |config|
+	(1..NODE_COUNT).each do |i|
+	  config.vm.define "node#{i}" do |rev|
+            rev.vm.box = BOX_IMAGE 
+	    rev.vm.hostname = "node#{i}.box"
+	    rev.vm.network "private_network", ip: "#{NETWORK_BASE}.#{INTEGRATION_START_SEGMENT + i}", netmask: NETWORK_NETMASK
+	    rev.vm.provision "shell", inline: $script_rev#{i}
+	    rev.vm.provision "shell", inline: "echo node#{i} is up and running && ifconfig | grep 'inet 192.168'"
+	end
+  
+end
+
+$script_rev1 = <<-EOF2
+export LC_ALL=en_US.UTF-8
+sudo iptables -I INPUT -j ACCEPT
+sudo setsebool -P httpd_can_network_connect true && echo SELinux command OK
+sudo yum -y install nano wget
+sudo wget -O /etc/yum.repos.d/jenkins.repo http://pkg.jenkins-ci.org/redhat-stable/jenkins.repo
+sudo rpm --import https://jenkins-ci.org/redhat/jenkins-ci.org.key
+sudo mkdir /var/cache/jenkins
+sudo mkdir /var/lib/jenkins
+sudo mkdir /var/log/jenkins
+sudo yum -y install jenkins nginx net-tools policycoreutils-python java
+sudo wget -O /etc/sysconfig/jenkins https://raw.githubusercontent.com/zulus911/lectures/master/lecture2/jenkins
+sudo wget -O /etc/yum.repos.d/nginx.repo https://raw.githubusercontent.com/zulus911/lectures/master/lecture2/nginx.repo
+sudo yum -y install nginx ansible
+sudo cat >/etc/nginx/conf.d/default.conf <<NDC
+server {
+    listen	 80 default_server;
+    server_name  localhost;
+    location / {
+        root   /usr/share/nginx/html;
+        index  index.html index.htm;
+    }
+    error_page   500 502 503 504  /50x.html;
+    location = /50x.html {
+        root   /usr/share/nginx/html;
+    }
+    location ~* / {
+        proxy_pass   http://127.0.0.1:22222;
+    }
+}
+NDC
+sudo service nginx start
+sudo service jenkins start
+EOF2
+
+$script_rev2 = <<-EOF2
+export LC_ALL=en_US.UTF-8
+sudo iptables -I INPUT -j ACCEPT
+sudo setsebool -P httpd_can_network_connect true && echo SELinux command OK
+#sudo yum -y install nano wget
+
+EOF2
+end
