@@ -1,0 +1,13 @@
+---
+- name: apply common configuration to all nodes
+  hosts: all
+  roles:
+    - common
+
+- name: install vim for better driving experience
+  hosts: frontend
+  remote_user: vagrant
+  tasks:
+        - name: install wheel
+          command: sudo yum -y install nano vim
+          ignore_errors: true
