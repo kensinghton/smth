@@ -62,7 +62,7 @@ job("INSTALL") {
 	keepDependencies(false)
 	disabled(false)
 	steps {
-		shell("""ansible-playbook ~/playbook.yml -i inventory.ini
+		shell("""ansible-playbook ~/playbook.yml -i ~/inventory.ini
 			""")
 		}
 }
