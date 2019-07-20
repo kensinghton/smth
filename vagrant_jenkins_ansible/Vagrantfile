@@ -54,6 +54,16 @@ sudo wget -O ~/ansible/ https://raw.githubusercontent.com/kensinghton/smth/maste
 
 sudo service nginx start
 sudo service jenkins start
+java -jar jenkins-cli.jar -s http://localhost:8080/ install-plugin https://plugins.jenkins.io/ansible -deploy
+
+sudo cat >~/jenkins.xml <<JJF
+server {
+    listen	 80 default_server;
+    server_name  localhost;
+   
+JJF
+sudo java -jar /home/ubuntu/jenkins-cli.jar -s http://localhost:8080 create-job test<~/jenkins.xml
+
 EOF2
 
 $script_rev2 = <<-EOF2
