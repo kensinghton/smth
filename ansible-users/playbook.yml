@@ -1,56 +1,21 @@
 ---
-- name: create "users-ops" group
-  group:
-    name: users-ops
-    state: present
 
-- name: add user accounts
-  user:
-    name: "{{ item }}"
-    shell: /bin/bash
-    groups: [users-ops]
-    state: present
-  with_items: "{{ new_users }}"
-
-- name: determine existing users
-  shell: 'grep users-ops /etc/group | cut -d: -f4 | tr "," "\n"'
-  changed_when: false 
-  register: existing_users
-
-- name: determine removed users
-  set_fact:
-    removed_users: "{{ existing_users.stdout_lines | difference(new_users) }}"
-
-- name: delete removed user accounts
-  user:
-    name: "{{ item }}"
-    state: absent
-  with_items: "{{ removed_users }}"
-
-- name: make ssh keys for our new users
-  hosts: 127.0.0.1
-  connection: local
+- hosts: all
+  become: yes
   tasks:
-  - name: make keys
-  - command: {{ items }}
-    with_items:
-    - ssh-keygen -f ~/{{ new_users }}-key-ecdsa -t ecdsa -b 521 -P {{ new_users }}-passphrase
-    - mkdir /home/{{ new_users }}/.ssh/
-    - mkdir /home/{{ new_users }}/.ssh/authorized_keys
-    - chown -R {{ new_users }}:{{ new_users }} /home/{{ new_users }}/.ssh
-    - chmod 700 /home/{{ new_users }}/.ssh
-    - chmod 600 /home/{{ new_users }}/.ssh/authorized_keys
-    - sudo sed -i.bak -e 's/.*PasswordAuthentication.*/PasswordAuthentication no/' /etc/ssh/sshd_config
-    - sudo sed -i.bak -e 's/.*PubkeyAuthentication.*/PubkeyAuthentication yes/' /etc/ssh/sshd_config
-    - sudo systemctl restart sshd.service
+      - name: 'Create user "{{ item }}"'
+        user:
+           name: "{{ item }}"
+           state: present
+           generate_ssh_key: yes
+           ssh_key_bits: 2048
+           ssh_key_file: .ssh/id_rsa
+        with_items: "{{ users }}"
 
-- name: Copy keys with owner and permissions
-  copy:
-    src: ~/{{ new_users }}-key-ecdsa
-    dest: /home/{{ new_users }}/.ssh/authorized_keys
-    owner: {{ new_users }}
-    group: {{ new_users }}
-    mode: '0600'
-
-
-
+      - name: 'Create home directory for "{{ item }}"'
+        file:
+          path: '/home/"{{ item }}"'
+          state: directory
+          owner: "{{ item }}"
+          mode: 0700
+        loop: "{{ users }}"
