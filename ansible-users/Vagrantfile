@@ -1,6 +1,6 @@
 ENV["LC_ALL"] = "en_US.UTF-8"
 BOX_IMAGE = "generic/centos7"
-NODE_COUNT = "1".to_i
+NODE_COUNT = "2".to_i
 NETWORK_BASE = "192.168.101"
 NETWORK_NETMASK = "255.255.255.0"
 INTEGRATION_START_SEGMENT = 10
@@ -11,14 +11,45 @@ Vagrant.configure("2") do |config|
             rev.vm.box = BOX_IMAGE 
 	    rev.vm.hostname = "node#{i}.box"
 	    rev.vm.network "private_network", ip: "#{NETWORK_BASE}.#{INTEGRATION_START_SEGMENT + i}", netmask: NETWORK_NETMASK
-	    rev.vm.provision "shell", inline: $script_rev#{i}
+		if rev.vm.hostname == "node2.box" then
+	    rev.vm.provision "shell", inline: $script_rev2
+		else
+	    rev.vm.provision "shell", inline: $script_rev1
 	    rev.vm.provision "shell", inline: "echo node#{i} is up and running && ifconfig | grep 'inet 192.168'"
+		end
 	end
-  
-end
-$script_rev1 = <<-EOF2
+  end
+$script_rev1 = <<-EOF1
 export LC_ALL=en_US.UTF-8
 sudo iptables -I INPUT -j ACCEPT
 sudo setsebool -P httpd_can_network_connect true && echo SELinux command OK
+sudo sed -i.bak "/PubkeyAuthentication/c\PubkeyAuthentication yes" /etc/ssh/sshd_config && echo SSH pubkey authentification is allowed
+sudo systemctl restart sshd
+EOF1
+
+$script_rev2 = <<-EOF2
+export LC_ALL=en_US.UTF-8
+sudo iptables -I INPUT -j ACCEPT
+sudo setsebool -P httpd_can_network_connect true && echo SELinux command OK
+sudo sed -i.bak "/PubkeyAuthentication/c\PubkeyAuthentication yes" /etc/ssh/sshd_config && echo SSH pubkey authentification is allowed
+sudo yum install tree ansible -y
+echo vagrant >> password.txt
+yes y |ssh-keygen -f ~/.ssh/master-key-ecdsa -t ecdsa -b 521 -P master-passphrase >/dev/null
+sshpass -f password.txt ssh-copy-id -i ~/.ssh/master-key-ecdsa vagrant@192.168.101.11
+mkdir -p ansible
+mkdir -p ansible/group_vars
+cd ansible
+wget https://raw.githubusercontent.com/kensinghton/smth/master/ansible-users/inventory.ini -o inventory.ini
+wget https://raw.githubusercontent.com/kensinghton/smth/master/ansible-users/playbook.yml -o playbook.yml
+wget https://raw.githubusercontent.com/kensinghton/smth/master/ansible-users/group_vars/all -o ./group_vars/all
+ansible-playbook playbook.yml -i inventory.ini
+declare -a users=("vasy" "pety" "masha")
+for usertree in "${users[@]}"; do
+sudo scp vagrant@192.168.101.11:/home/$usertree/.ssh/id_rsa ~/id_rsa_$usertree
+done
+declare -a users=("vasy" "pety" "masha")
+for usertree in "${users[@]}"; do
+ssh -t vagrant@192.168.101.11 "sudo tree -d /home/$usertree/"
+done
 EOF2
 end
