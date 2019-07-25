@@ -32,6 +32,7 @@ export LC_ALL=en_US.UTF-8
 sudo iptables -I INPUT -j ACCEPT
 sudo setsebool -P httpd_can_network_connect true && echo SELinux command OK
 sudo sed -i.bak "/PubkeyAuthentication/c\PubkeyAuthentication yes" /etc/ssh/sshd_config && echo SSH pubkey authentification is allowed
+sudo systemctl restart sshd
 sudo yum install tree ansible -y
 echo vagrant >> password.txt
 yes y |ssh-keygen -f ~/.ssh/master-key-ecdsa -t ecdsa -b 521 -P master-passphrase >/dev/null
