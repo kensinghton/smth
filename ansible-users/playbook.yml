@@ -2,20 +2,7 @@
 
 - hosts: all
   become: yes
-  tasks:
-      - name: 'Create user "{{ item }}"'
-        user:
-           name: "{{ item }}"
-           state: present
-           generate_ssh_key: yes
-           ssh_key_bits: 2048
-           ssh_key_file: .ssh/id_rsa
-        with_items: "{{ users }}"
-
-      - name: 'Create home directory for "{{ item }}"'
-        file:
-          path: '/home/"{{ item }}"'
-          state: directory
-          owner: "{{ item }}"
-          mode: 0700
-        loop: "{{ users }}"
+  roles:
+    - new_user_create
+    - new_user_homedir
+    
