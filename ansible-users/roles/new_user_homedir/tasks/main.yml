@@ -1,0 +1,8 @@
+---
+- name: Create homedir for users
+     file:
+        path: '/home/"{{ item }}"'
+        state: directory
+        owner: "{{ item }}"
+        mode: 0700
+     loop: "{{ users }}"
