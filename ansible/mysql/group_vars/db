@@ -1,0 +1,5 @@
+---
+- vars:
+    db_user: axeller
+    db_name: somedb
+    db_pass: very_secret_password_nonono
