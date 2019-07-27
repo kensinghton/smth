@@ -1,5 +1,7 @@
 ---
-- vars:
-    db_user: axeller
-    db_name: somedb
-    db_pass: very_secret_password_nonono
+
+mysqlservice: mysqld
+mysql_port: 3306
+dbuser: axeller
+dbname: somedb
+upassword: topsecret
