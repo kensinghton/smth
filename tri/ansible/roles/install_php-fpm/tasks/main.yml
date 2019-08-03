@@ -1,0 +1,8 @@
+---
+- name: install php
+  apt:
+    name: "{{ packages }}"
+    state: present
+  vars:
+    packages:
+    - php
