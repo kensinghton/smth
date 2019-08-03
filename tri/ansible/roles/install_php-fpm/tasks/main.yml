@@ -7,3 +7,12 @@
     packages:
     - php7.2
     - php7.2-fpm
+    
+- name: install nginx
+  apt:
+    name: "{{ packages }}"
+    state: present
+  vars:
+    packages:
+    - nginx
+    
