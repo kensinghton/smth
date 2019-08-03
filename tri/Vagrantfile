@@ -46,6 +46,6 @@ dpkg --get-selections | grep ansible || sudo apt install software-properties-com
 export ANSIBLE_HOST_KEY_CHECKING=False
 cd '/home/vagrant/'
 ansible-playbook -i hosts site.yml
-
+sudo systemctl status php5-fpm
 EOF2
 end
