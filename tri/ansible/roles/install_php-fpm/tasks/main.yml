@@ -5,5 +5,5 @@
     state: present
   vars:
     packages:
-    - php5
-    - php5-fpm
+    - php7.2
+    - php7.2-fpm
