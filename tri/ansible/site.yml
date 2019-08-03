@@ -1,0 +1,5 @@
+---
+- hosts: frontend
+  become: yes
+  roles:
+    - install_php-fpm
