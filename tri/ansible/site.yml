@@ -2,4 +2,8 @@
 - hosts: frontend
   become: yes
   roles:
-    - install_php-fpm
+    - server
+    - php
+    - nginx
+    - mysql
+    - wordpress
