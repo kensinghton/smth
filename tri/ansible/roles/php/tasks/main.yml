@@ -1,0 +1,38 @@
+---
+
+- name: install php
+  apt: 
+    update_cache: yes 
+    name: "{{ packages }}"
+    state: present
+  vars:
+    packages:
+    - php7.2
+    - php7.2-fpm
+    - php7.2-mysql
+    - php7.2-common
+    - php7.2-tidy
+    - php7.2-xml
+    - php7.2-xmlrpc
+    - php7.2-mbstring
+    - php7.2-memcached
+    - php7.2-curl
+    - php7.2-zip
+    - php7.2-dev
+    - php-pear
+    - libmcrypt-dev
+    - libreadline-dev
+
+- stat:
+    path: /usr/lib/libmcrypt.so
+  register: mcr
+
+- name: install the PECL mcrypt package
+  shell: yes '' | pecl install -s mcrypt-1.0.2
+  when: mcr.stat.exists == False
+
+- name: install mcrypt
+  become: yes
+  command: "{{ item }}"
+  loop:
+    - echo 'extension=mcrypt.so' >> '/etc/php/7.2/fpm/php.ini'

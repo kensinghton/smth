@@ -1,0 +1,19 @@
+---
+# defaults file for wordpress
+wp_install_path : '/var/www'
+wp_directory_name: 'infinitypp'
+ 
+wp_db_name: 'name'
+wp_db_username: 'nm'
+wp_db_password: "22"
+wp_db_host: '192.168.101.11'
+wp_table_prefix: 'wpzcx_'
+wp_debug_mode: 'FALSE'
+
+mysql:
+  root_db_password: REDACTED
+  hosts:
+    - "{{ ansible_hostname }}"
+    - 127.0.0.1
+    - ::1
+    - localhost
