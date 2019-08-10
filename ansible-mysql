@@ -1,0 +1,49 @@
+# ansible-playbook -i 192.168.101.11, ansible-mysql -e "ansible_user=vagrant ansible_ssh_pass=vagrant"
+---
+- hosts: all
+  become: yes
+#  remote_user: root
+  tasks:
+
+  - name: install pymysql
+    apt:
+      name: python-pymysql 
+      state: present
+
+  - name: install mysql
+    apt: 
+      update_cache: yes
+      name: "{{ packages }}"
+      state: present
+    vars:
+      packages:
+      - python-mysqldb
+      - mysql-server
+      - mysql-client
+      - mysql-common
+  
+#  - name: set my.cnf
+#    shell: "echo 'socket=/var/lib/mysql/mysql.sock' >> ~/.my.cnf"
+
+  - name: ensure MySQL always starts
+    service:
+     name: mysql
+     state: started
+     enabled: yes
+
+  - name: Create database user
+    become: yes
+    mysql_user:
+      login_user: root
+      login_password: "" 
+      name: bob 
+      password: 12345 
+      priv: '*.*:ALL'
+      state: present
+#      login_unix_socket: /var/lib/mysql/mysql.sock
+
+  - name: Create database
+    mysql_db: 
+      name: bobdata 
+      state: present
+      login_unix_socket: /var/lib/mysql/mysql.sock
