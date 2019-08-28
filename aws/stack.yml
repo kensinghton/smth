@@ -1,0 +1,22 @@
+Resources:
+  InstanceNode:
+    Type: AWS::EC2::Instance
+    Properties:
+      IntanceType: t2.micro
+      ImageId: ami-06358f49b5839867c
+      KeyName: CFA1
+      SecurityGroups:
+        - !Ref InstanceNodeSG
+  InstanceNodeSG:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDeskription: Enable ssh and http
+      SecurityGroupIngress:
+      - IpProtocol: tcp
+        FromPort: '80'
+        ToPort: '80'
+        CidrIp: 0.0.0.0/0
+      - IpProtocol: tcp
+        FromPort: '22'
+        ToPort: '22'
+        CidrIp: 0.0.0.0/0
