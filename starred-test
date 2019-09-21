@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+e() { echo -ne "\\${1}"; }
+for i in "0 x6D" "1 x6E" "2 x74" "3 x66" "4 x6F" "5 x72" "6 x67" "7 x65"; do
+  declare -a _F=($(echo $i))
+  declare _A="${_F[0]}"
+  read "_$_A" <<< "${_F[1]}"
+  declare _C="_$_A"
+  e "${_C}"
+done
+echo
