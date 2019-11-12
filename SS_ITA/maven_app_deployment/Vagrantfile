@@ -40,22 +40,26 @@ if [ -z "$(find /var/cache/apt/pkgcache.bin -mmin -60)" ]; then
   apt-get update
 fi
 
-dpkg --get-selections | grep ansible || sudo apt install git maven tomcat8 -y
-#sudo tee -a /etc/tomcat8/tomcat-users.xml > /dev/null <<EOT
-#<?xml version="1.0" encoding="UTF-8"?>
-#<tomcat-users xmlns="http://tomcat.apache.org/xml"
-#              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-#              xsi:schemaLocation="http://tomcat.apache.org/xml tomcat-users.xsd"
-#              version="1.0">
-#<role rolename="manager-gui"/>
-#<user username="tom" password="q3e" roles="manager-gui"/>
-#</tomcat-users>
-#EOT
-git clone https://github.com/shashirajraja/onlinebookstore
-cd onlinebookstore/
-mvn clean install
-sudo cp target/onlinebookstore-0.0.1-SNAPSHOT.war /var/lib/tomcat8/webapps/
-#sudo systemctl restart tomcat8.service
+dpkg --get-selections | grep git || sudo apt install git maven tomcat8 jenkins -y
+#git clone https://github.com/shashirajraja/onlinebookstore
+#cd onlinebookstore/
+#mvn clean install
+#sudo cp target/onlinebookstore-0.0.1-SNAPSHOT.war /var/lib/tomcat8/webapps/
+
+sudo sed -i.bak "/HTTP_PORT=8080/c\HTTP_PORT=8082" /etc/default/jenkins &&
+sudo sed -i.bak "/<useSecurity>true</useSecurity>/c\<useSecurity>false</useSecurity>" /etc/default/jenkins &&
+echo "Jenkins' http port is now 8082"
+
+sudo systemctl restart jenkins.service
+curl 127.0.0.1:8082/jnlpJars/jenkins-cli.jar --output jenkins-cli.jar
+java -jar jenkins-cli.jar -s http://127.0.0.1:8082/ install-plugin maven-plugin
+#wget http://apache.volia.net/maven/maven-3/3.6.2/binaries/apache-maven-3.6.2-bin.tar.gz
+#sudo mkdir -p /opt/maven
+#sudo tar -xvzf apache-maven-3.6.2-bin.tar.gz -C /opt/maven/ --strip-components=1
+sudo su - jenkins -c "M2_HOME=/usr/share/maven/"
+
+
+
 
 EOF2
 end
