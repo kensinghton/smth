@@ -47,8 +47,8 @@ dpkg --get-selections | grep git || sudo apt install git maven tomcat8 jenkins -
 #sudo cp target/onlinebookstore-0.0.1-SNAPSHOT.war /var/lib/tomcat8/webapps/
 
 sudo sed -i.bak "/HTTP_PORT=8080/c\HTTP_PORT=8082" /etc/default/jenkins &&
-sudo sed -i.bak "/<useSecurity>true</useSecurity>/c\<useSecurity>false</useSecurity>" /etc/default/jenkins &&
-echo "Jenkins' http port is now 8082"
+sudo sed -i.bak 's/<useSecurity>true<\/useSecurity>/<useSecurity>false<\/useSecurity>/g' /var/lib/jenkins/config.xml &&
+echo "Jenkins' http port is now 8082 without security"
 
 sudo systemctl restart jenkins.service
 curl 127.0.0.1:8082/jnlpJars/jenkins-cli.jar --output jenkins-cli.jar
