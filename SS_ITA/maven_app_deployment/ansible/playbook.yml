@@ -1,13 +1,16 @@
 ---
-#- name: apply common configuration to all nodes
-#  hosts: all
-#  roles:
-#    - common
-
-- name: Tasks for DB/Jenkins node
+- name: Roles for DB/Jenkins node
   hosts: db_jenkins
-  remote_user: vagrant
-  tasks:
-        - name: install wheel
-          command: sudo yum -y install nano vim
-          ignore_errors: true
+  roles:
+    - git
+    - maven
+    - mysql
+    - jenkins
+- name: Roles for Loadbalancer node
+  hosts: loadbalancer
+  roles:
+    - nginx
+- name: Roles for Backend node
+  hosts: backend
+  roles:
+    - tomcat
