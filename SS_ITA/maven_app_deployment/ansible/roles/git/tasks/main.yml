@@ -1,0 +1,8 @@
+---
+- name: install git
+  apt:
+    name: "{{ packages }}"
+    state: present
+  vars:
+    packages:
+    - git
