@@ -1,0 +1,15 @@
+---
+db_name: 'name'
+db_username: 'nm'
+db_password: "22"
+db_host: '192.168.101.01'
+table_prefix: 'wpzcx_'
+
+
+mysql:
+  root_db_password: REDACTED
+  hosts:
+    - "{{ ansible_hostname }}"
+    - 127.0.0.1
+    - ::1
+    - localhost
