@@ -1,5 +1,4 @@
 ---
-
 - name: Clean www dir
   file:
     state: absent
@@ -10,7 +9,6 @@
     state: directory
     path: "/var/www/html"
 
-
 - name: install nginx
   apt: 
     update_cache: yes 
@@ -20,24 +18,10 @@
     packages:
     - nginx
 
-#- name: Clean www dir
-#  file:
-#    state: absent
-#    path: "/var/www/html"
-#  file: 
-#    path: "/var/www/html"
-#    state: directory
-
-
 - name: Template nginx file 
   template:
     src: ../templates/nginx.j2
-    dest: /etc/nginx/sites-available/default
-  
-- name: Restart services
-  service:
-    name: php7.2-fpm
-    state: restarted
+    dest: /etc/nginx/conf.d/default.conf
 
 - name: restart nginx
   command: "nginx -s reload"
