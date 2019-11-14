@@ -1,0 +1,13 @@
+---
+#- name: apply common configuration to all nodes
+#  hosts: all
+#  roles:
+#    - common
+
+- name: Tasks for DB/Jenkins node
+  hosts: db_jenkins
+  remote_user: vagrant
+  tasks:
+        - name: install wheel
+          command: sudo yum -y install nano vim
+          ignore_errors: true
