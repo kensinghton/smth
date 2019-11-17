@@ -7,10 +7,10 @@ RAM_MEM = 1024
 Vagrant.configure("2") do |config|
 	(1..NODE_COUNT).each do |machine_id|
 	  config.vm.define "node#{machine_id}" do |machine|
-	    machine.trigger.before [:up, :provision] do |trigger|
-		trigger.info = "Instaling Ansible locally..."
-		trigger.run = {path: "./install_ansible.sh"}
-	    end
+#	    machine.trigger.before [:up, :provision] do |trigger|
+#		trigger.info = "Instaling Ansible locally..."
+#		trigger.run = {path: "./install_ansible.sh"}
+#	    end
             machine.vm.box = BOX_IMAGE 
 	    machine.vm.provider "virtualbox" do |v|
 		v.memory = "#{RAM_MEM}"
@@ -20,12 +20,19 @@ Vagrant.configure("2") do |config|
 	    machine.vm.provision "shell", inline: "echo node#{machine_id} is up and running && hostname -I"
 	
 	    if machine_id == NODE_COUNT
-		machine.vm.provision :ansible do |ansible|
-		    ansible.limit = "all" # Disable default limit to connect to all the machines
-		    ansible.inventory_path = "./ansible/inventory.ini"
-		    ansible.playbook = "./ansible/playbook.yml"
+		if machine.vm.hostname == "node1" then
+		    machine.vm.provision "file", source: "./ansible/.", destination: "/home/vagrant/"
+		    machine.vm.provision "shell", inline: $script_main
 		end
 	    end
 	end
     end
+$script_main = <<-EOF1
+export LC_ALL=en_US.UTF-8
+sudo apt-get update
+sudo apt-get install ansible -y
+export ANSIBLE_HOST_KEY_CHECKING=False
+cd '/home/vagrant/'
+ansible-playbook -i inventory.ini playbook.yml
+EOF1
 end
