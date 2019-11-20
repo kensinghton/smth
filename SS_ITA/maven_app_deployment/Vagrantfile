@@ -1,6 +1,6 @@
 ENV["LC_ALL"] = "en_US.UTF-8"
 BOX_IMAGE = "ubuntu/bionic64"
-NODE_COUNT = 5
+NODE_COUNT = 3
 NETWORK_NETMASK = "255.255.255.0"
 RAM_MEM = 512
 
@@ -15,24 +15,42 @@ Vagrant.configure("2") do |config|
 	    machine.vm.provider "virtualbox" do |v|
 		v.memory = "#{RAM_MEM}"
 	    end
-	    machine.vm.hostname = "node#{machine_id}"
-	    machine.vm.network "private_network", ip: "192.168.101.#{machine_id}", netmask: NETWORK_NETMASK
-	    machine.vm.provision "shell", inline: "echo node#{machine_id} is up and running && hostname -I"
-	
-	    if machine_id == NODE_COUNT
-		if machine.vm.hostname == "node1" then
-		    machine.vm.provision "file", source: "./ansible/.", destination: "/home/vagrant/"
-		    machine.vm.provision "shell", inline: $script_main
-		end
+	    machine.vm.hostname = "backendnode#{machine_id}"
+	    machine.vm.network "private_network", ip: "192.168.101.1#{machine_id}", netmask: NETWORK_NETMASK
+	    machine.vm.provision "shell", inline: $script
+	    machine.vm.provision "shell", inline: "echo backendnode#{machine_id} is up and running && hostname -I"
+	  end
+        end
+	config.vm.define 'dbnode' do |machine|
+	   machine.vm.box = BOX_IMAGE 
+	    machine.vm.provider "virtualbox" do |v|
+		v.memory = "#{RAM_MEM}"
 	    end
+	    machine.vm.hostname = "dbnode"
+	    machine.vm.network "private_network", ip: "192.168.101.3", netmask: NETWORK_NETMASK
+	    machine.vm.provision "shell", inline: $script
+	    machine.vm.provision "shell", inline: "echo dbnode is up and running && hostname -I"
 	end
-    end
-$script_main = <<-EOF1
+	config.vm.define 'loadbalancer' do |machine|
+	   machine.vm.box = BOX_IMAGE 
+	    machine.vm.provider "virtualbox" do |v|
+		v.memory = "#{RAM_MEM}"
+	    end
+	    machine.vm.hostname = "loadbalancer"
+	    machine.vm.network "private_network", ip: "192.168.101.2", netmask: NETWORK_NETMASK
+	    machine.vm.provision "shell", inline: $script
+	    machine.vm.provision "shell", inline: "echo loadbalancer is up and running && hostname -I"
+	  machine.vm.provision "ansible_local" do |ansible|
+	    ansible.playbook = "./ansible/playbook.yml"
+	    ansible.verbose        = true
+	    ansible.install        = true
+	    ansible.limit          = "all" # or only "nodes" group, etc.
+	    ansible.inventory_path = "./ansible/inventory.ini"
+	  end
+	end
+$script = <<-EOF1
 export LC_ALL=en_US.UTF-8
-sudo apt-get update
-sudo apt-get install ansible -y
-export ANSIBLE_HOST_KEY_CHECKING=False
-cd '/home/vagrant/'
-ansible-playbook -i inventory.ini playbook.yml
-EOF1
+sudo sed -i.bak "/PasswordAuthentication/c\PasswordAuthentication yes" /etc/ssh/sshd_config && echo SSH pass authentication is allowed
+sudo service ssh restart
+EOF
 end

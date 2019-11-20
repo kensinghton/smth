@@ -10,21 +10,21 @@
     - openjdk-8-jre
 
 - name: Start & Enable Jenkins
-    service:
-      name: jenkins
-      state: started
-      enabled: true
+  service:
+    name: jenkins
+    state: started
+    enabled: true
 
 - name: Sleep for 30 seconds and continue with play
-    wait_for: timeout=30
+  wait_for: timeout=30
 
 - name: Get init password Jenkins
-    shell: cat /var/lib/jenkins/secrets/initialAdminPassword
-    changed_when: false
-    register: result
+  shell: cat /var/lib/jenkins/secrets/initialAdminPassword
+  changed_when: false
+  register: result
 
 - name: Print init password Jenkins
-    debug:
-      var: result.stdout
+  debug:
+    var: result.stdout
       
-https://github.com/geerlingguy/ansible-role-jenkins
+#https://github.com/geerlingguy/ansible-role-jenkins
