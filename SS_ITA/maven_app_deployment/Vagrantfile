@@ -2,7 +2,7 @@ ENV["LC_ALL"] = "en_US.UTF-8"
 BOX_IMAGE = "ubuntu/bionic64"
 NODE_COUNT = 5
 NETWORK_NETMASK = "255.255.255.0"
-RAM_MEM = 1024
+RAM_MEM = 512
 
 Vagrant.configure("2") do |config|
 	(1..NODE_COUNT).each do |machine_id|
@@ -16,7 +16,7 @@ Vagrant.configure("2") do |config|
 		v.memory = "#{RAM_MEM}"
 	    end
 	    machine.vm.hostname = "node#{machine_id}"
-	    machine.vm.network "private_network", ip: "192.168.101.0#{machine_id}", netmask: NETWORK_NETMASK
+	    machine.vm.network "private_network", ip: "192.168.101.#{machine_id}", netmask: NETWORK_NETMASK
 	    machine.vm.provision "shell", inline: "echo node#{machine_id} is up and running && hostname -I"
 	
 	    if machine_id == NODE_COUNT
