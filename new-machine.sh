@@ -47,8 +47,8 @@ wget -O - https://mcpelauncher.mrarm.io/apt/conf/public.gpg.key | sudo apt-key a
 sudo add-apt-repository 'deb http://mcpelauncher.mrarm.io/apt/ubuntu/ bionic main' -y
 
 #default
-apt update && apt upgrade -y
-apt install -y nano vagrant google-chrome-stable vlc gnome-tweaks \
+sudo apt update && sudo apt upgrade -y
+sudo apt install -y nano vagrant google-chrome-stable vlc gnome-tweaks \
                kdeconnect gimp inkscape telegram scribus-ng steam \
                openjdk-8-jdk msa-daemon msa-ui-qt mcpelauncher-client \
                mcpelauncher-ui-qt libegl1-mesa:i386 libegl1-mesa-dev:i386 \
