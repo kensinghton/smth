@@ -1,0 +1,154 @@
+server {
+    listen 80;
+    server_name api.tech.idoc.com.ua;
+    return 301 https://$http_host$request_uri;
+}
+
+server {
+    listen 8088 ssl;
+    server_name api.tech.idoc.com.ua;
+    ssl_certificate /etc/nginx/ssl/_.tech.idoc.com.ua.crt;
+    ssl_certificate_key /etc/nginx/ssl/_.tech.idoc.com.ua.key;
+    access_log /sybase/logs/nginx/access-api.log;
+    error_log /sybase/logs/nginx/error-api.log info;
+    client_max_body_size 50m;
+    location /oauth2/ {
+        proxy_pass       http://89.184.66.246:4180;
+        proxy_set_header Host                    $host;
+        proxy_set_header X-Real-IP               $remote_addr;
+        proxy_set_header X-Scheme                $scheme;
+        proxy_set_header X-Auth-Request-Redirect $request_uri;
+      }
+    location = /oauth2/auth {
+        proxy_pass       http://89.184.66.246:4180;
+        proxy_set_header Host             $host;
+        proxy_set_header X-Real-IP        $remote_addr;
+        proxy_set_header X-Scheme         $scheme;
+        proxy_set_header Content-Length   "";
+        proxy_pass_request_body           off;
+        proxy_redirect http:// https://;
+    }
+   location / {
+       auth_request /oauth2/auth;
+       error_page 401 = /oauth2/sign_in;
+       auth_request_set $user   $upstream_http_x_auth_request_user;
+       auth_request_set $email  $upstream_http_x_auth_request_email;
+       proxy_set_header X-User  $user;
+       proxy_set_header X-Email $email;
+       auth_request_set $auth_cookie $upstream_http_set_cookie;
+       add_header Set-Cookie $auth_cookie;
+       proxy_pass http://89.184.66.246:5601;
+       proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+       proxy_set_header x-proxy-user admin;
+       proxy_set_header x-proxy-roles admin;
+   }
+}
+
+ldap_server group_users {
+    url "ldap://10.0.100.3:389/dc=idoc,dc=local?uid?sub";
+    binddn "cn=ldapadm,dc=idoc,dc=local";
+    binddn_passwd cuYfhqsqobedGF9n2VFZWjff4sNTnj;
+    group_attribute member;
+    group_attribute_is_dn on;
+    require group "cn=swagger_api_doc_user,ou=groups,dc=idoc,dc=local";
+    require valid_user;
+}
+
+ldap_server ldapserver {
+    url "ldap://10.0.100.3:389/dc=idoc,dc=local?uid?sub";
+    binddn "cn=ldapadm,dc=idoc,dc=local";
+    binddn_passwd cuYfhqsqobedGF9n2VFZWjff4sNTnj;
+    group_attribute member;
+    group_attribute_is_dn on;
+    set $role readall;
+    set $ldapgroup swagger_api_doc_user;
+    require group "cn=ldapgroup,ou=groups,dc=idoc,dc=local";
+    require valid_user;
+}
+
+perl_require  /etc/nginx/scripts/LDAPAuth_v2.pm;
+
+server {
+    listen 443 ssl;
+    server_name api.tech.idoc.com.ua;
+    ssl_certificate     certs/_.tech.idoc.com.ua.crt;
+    ssl_certificate_key certs/_.tech.idoc.com.ua.key;
+    access_log /sybase/logs/nginx/access-api.log;
+    error_log /sybase/logs/nginx/error-api.log info;
+    root /sybase/iDoc_api_docs;
+    set $ldapauth_server "10.0.100.3:389";
+    set $ldapauth_basedn "dc=idoc,dc=local";
+    set $ldapauth_group_user "swagger_api_doc_user";
+    client_max_body_size 50m;
+    location /_auth {
+        internal;
+        perl LDAPAuth_v2::handler;
+    }
+    location = / {
+        return 301 /wf-base/project-base.html permanent;
+    }
+    location = /wf-base/project-base.html {
+        set $group group_users;
+        set $role readall;
+        auth_ldap "Closed content for users";
+        auth_ldap_servers ldapserver;
+        proxy_pass http://89.184.66.246:5601;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header x-proxy-user $remote_user;
+        proxy_set_header x-proxy-roles $role;
+    }
+#    location / {
+#        autoindex on;
+#    }
+    error_page 500 502 503 504 /50x.html;
+    location = /50x.html {
+        root html;
+    }
+}
+
+###############################
+
+global
+    log         127.0.0.1 local2
+
+    chroot      /var/lib/haproxy
+    pidfile     /var/run/haproxy.pid
+    maxconn     4000
+    user        haproxy
+    group       haproxy
+    daemon
+
+    stats socket /var/lib/haproxy/stats
+
+    ssl-default-bind-ciphers PROFILE=SYSTEM
+    ssl-default-server-ciphers PROFILE=SYSTEM
+
+defaults
+    mode                    http
+    log                     global
+    option                  httplog
+    option                  dontlognull
+    option http-server-close
+    option forwardfor       except 127.0.0.0/8
+    option                  redispatch
+    retries                 3
+    timeout http-request    10s
+    timeout queue           1m
+    timeout connect         10s
+    timeout client          1m
+    timeout server          1m
+    timeout http-keep-alive 10s
+    timeout check           10s
+    maxconn                 3000
+
+frontend ldap_front
+    bind 127.0.0.1:389
+    mode tcp
+    option tcplog
+    default_backend             ldap_back
+
+backend ldap_back
+    mode tcp
+    balance roundrobin
+    option ldap-check
+    server ldap1 89.184.66.246:389 check
