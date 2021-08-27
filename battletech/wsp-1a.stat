@@ -1,0 +1,14 @@
+model=WSP-1A
+chassis=Wasp
+mass=20
+move=3
+isjump=J
+heat=2
+armorhead=1/1
+armortorso=2/2
+armorarms=1/1
+armorlegs=2/1
+punchkick=1/2
+weapons=2
+weapon1=Medium Laser
+weapon2=SRM2

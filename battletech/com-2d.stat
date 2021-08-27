@@ -1,0 +1,15 @@
+model=COM-2D
+chassis=Commando
+mass=25
+move=3
+isjump=N
+heat=2
+armorhead=2/1
+armortorso=3/3
+armorarms=2/1
+armorlegs=3/2
+punchkick=1/2
+weapons=3
+weapon1=Medium Laser
+weapon2=SRM6
+weapon3=SRM4
