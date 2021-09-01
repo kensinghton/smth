@@ -131,36 +131,36 @@
 200. "Ніт"
 
 128. Все є помилкою Комстара
-129. Always express your ROM tag
-130. It's all fun and games until someone takes an AC20 to the cockpit
-131. I use to be a mechwarrior like you, until I took the shrapnel in the knee(edited)
-132. You gotta have to do the highlander burial if you have a Highlander
-133. Never store ammo in centre torso
-134. Never store ammo in the head
-135. Missiles go in the feet
-136. When a stray AC/2 shot kills your assault mech on turn 1 across the board due to through armour critical, murder is still legal
-137. Make sure you carry enough ammo for your ammo dependent weapons
-138. DFA pilot check always fails
-139. The colder the planet, more of the fuck you firepower you can use against an opponent
-140. Everything after the Jihad never happened
-141. Everything after civil war never happened
-142. Glory to the federated Commonwealth forever
-143. Everything after clan invasion never happened(edited)
-144. Everything after 4th succession wars never happened
-145. Remember to properly sanitize your leather after visiting the magistry of canopus.(edited)
-146. Everything after 3rd succession war never happened
-147. Make your own history of the battletech universe
-148. Introtech is eternal
-149. Don't listen to mech-daddys. Later eras are fun
-150. Katherine Stiener-Davion did nothing wrong
-151. Stefan Amaris did nothing wrong
-152. Katherine Steiner did everything wrong
-153. Katherine Stiener-Davion was neither a Stiener nor a Davion. She was a whore.
-154. Louder
-155. The concept of thicc barely exists in battletech
-156. The Davions will win.
-157. The wolves will win.
-158. No one will win
+129. Завжди показуй свою мітку ROM
+130. Це все круто і смішно допоки хтось не отимує АС20 в кокпіт
+131. Колись я був таким мехвоїном, як ти, а потім я отримав шрапнель в коліно
+132. Ти повинен ховати горців, якщо в тебе є Хайлендер
+133. Ніколи не розміщуй БК в центральному торсі
+134. Ніколи не розміщуй БК в голові
+135. Ракети розміщуй в ногах
+136. Якщо випадкова АС/2 вбиває за постріл твій штурмовий мех на 1 ході через всю мапу за допомогою заброньових крітів - вбивство легально
+137. Перевіряй и достатньо набоїв для своєї зброї ти несеш
+138. Перевірки навички пілотування при DFA завжди провалюються (а от і ніт)
+139. Чим холодніша планета - тим більше всього ти можеш використати проти свого опонента
+140. Всього після Джихаду ніколи не було
+141. Всього після Громадянської Війни ФС ніколи не було
+142. Слава Федеративному Співтовариству навіки вічні
+143. Всього після Навали Кланів ніколи не було
+144. Всього після 4 Спадкової Війни ніколи не було
+145. Не забувай добре чистити свою шкіряну броню після візитів до Магістрату Канопусу
+146. Всього після 3 Спадкової Війни ніколи не було
+147. Роби свою власну історію всесвіту Батлтех
+148. Інтротех вічний
+149. Не слухай мех-татусів. Пізні ери веселі
+150. Катерина Штайнер-Девіон не робила нічого неправильного
+151. Стефан Амаріс не робив нічого неправильного
+152. Катерина Штайнер робила все неправильного
+153. Катерина Штайнер-Девіон не була ні Штайнер ні Девіон. Вона була повією.
+154. Гучніше
+155. Концепт "thicc" ледь живий у всесвіті батлтех
+156. Девіони переможуть
+157. Вовки переможуть
+158. Ніхто не переможе
 159. Victor Davions yellow fever was a disaster for the inner sphere
 160. You need not read about Alaric Ward. The outcome is predetermined.
 161. Davion glowies in this community will be batchalled.
@@ -179,6 +179,7 @@
 174. Rule 163 is true
 175. Contrary to popular opinion the new avalon institute of science is not the best military academy in the inner sphere.
 176. The Lyran Commonwealth can and does produce good officers
+
 177. The trick is retaining them(edited)
 178. poach officers from the nagelring
 189. A fusion between the Lyran Commonwealth and Draconis Combine would be devastating
